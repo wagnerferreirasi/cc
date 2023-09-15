@@ -16,12 +16,13 @@
         rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
 </head>
 
 <body class="antialiased">
-
-    {{ $slot }}
+    <x-navbar-component></x-navbar-component>
+    <div class="mt-24">
+        {{ $slot }}
+    </div>
 
     <script>
     document.addEventListener('swal', event => {
@@ -34,35 +35,48 @@
     });
 
     document.addEventListener('addCart', event => {
-        Swal.fire(
-            event.detail.text,
-            'Deseja adicionar o ' + event.detail.text + ' ao carrinho?',
-            'question'
-        ).then(result => {
-            if (result.value) {
+        Swal.fire({
+            title: event.detail.text,
+            text: 'Deseja adicionar o ' + event.detail.text + ' ao carrinho?',
+            input: 'number',
+            inputValue: 1,
+            inputAttributes: {
+                class: 'w-24 px-2 py-1 text-sm text-gray-500 border border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300',
+                min: 1,
+                value: event.detail.quantity
+            },
+            inputLabel: 'Quantidade',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#65a30d',
+            cancelButtonColor: '#450a0a',
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            allowOutsideClick: false
+        }).then(result => {
+            if (result.isConfirmed) {
                 axios.post('{{ route("add") }}', {
-                        product_id: event.detail.product_id,
-                        quantity: event.detail.quantity,
-                    }, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    })
-                    .then(response => {
-                        console.log(response.data);
-                        Toast.fire(
-                            'Sucesso!',
-                            response.data.message, // Use a mensagem do servidor aqui
-                            'success'
-                        );
-                    })
-                    .catch(error => {
-                        Toast.fire(
-                            'Ops!',
-                            error.response.data.message, // Use a mensagem do servidor aqui
-                            'error'
-                        );
-                    });
+                    product_id: event.detail.product_id,
+                    quantity: result.value
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    Toast.fire(
+                        'Sucesso!',
+                        response.data.message,
+                        'success'
+                    );
+                })
+                .catch(error => {
+                    Toast.fire(
+                        'Ops!',
+                        error.response.data.message,
+                        'error'
+                    );
+                });
             }
         });
     });

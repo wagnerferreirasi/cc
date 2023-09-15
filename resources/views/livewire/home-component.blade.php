@@ -44,52 +44,56 @@
             <button class="px-4 py-2 text-gray-500 border border-gray-100 rounded-md hover:bg-gray-50">
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><g><path fill="none" d="M0 0h24v24H0z"></path><path d="M11 2c4.968 0 9 4.032 9 9s-4.032 9-9 9-9-4.032-9-9 4.032-9 9-9zm0 16c3.867 0 7-3.133 7-7 0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7zm8.485.071l2.829 2.828-1.415 1.415-2.828-2.829 1.414-1.414z"></path></g></svg>
             </button>
-            <select name="" id="" class="w-full px-4 py-2 text-gray-500 border border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300">
-                <option value="">Selecione uma opção</option>
-                <option value="1">Opção 1</option>
-                <option value="2">Opção 2</option>
-                <option value="3">Opção 3</option>
-                <option value="4">Opção 4</option>
+            <select name="categoryFilter" id="categoryFilter" class="w-full px-4 py-2 text-gray-500 border border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300">
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
             </select>
         </div>
     </div>
     <div class="px-4">
-    <div class="max-w-4xl mx-auto">
-        @foreach ($categories as $category)
-            <div class="category">
-                <p class="flex italic font-bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 mr-2 text-red-950">
-                        <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z" clip-rule="evenodd" />
-                    </svg>
-                    <span class="text-xl text-red-950">
-                        {{ $category->name }}
-                    </span>
-                </p>
-            </div>
-
-            @foreach ($category->products as $product)
-                <div class="max-w-4xl p-4 mx-auto my-4 mt-4 border border-gray-200 rounded-lg">
-                    <a href="#" x-data="{ productData: { text: '{{ $product->name }}', product_id: {{ $product->id }}, quantity: 1 } }" @click="$dispatch('addCart', productData)" class="no-underline">
-                        <div class="justify-between sm:flex">
-                            <div class="mb-4 md:mb-0 md:ml-12 sm:order-2">
-                                <img src="{{ asset('img/'.$product->image) }}" alt="{{ $product->name }}" class="rounded-xl sm:w-32 md:w-32">
-                            </div>
-                            <div class="my-auto sm:order-1">
-                                <p class="font-semibold text-1xl">
-                                    {{ $product->name }}
-                                </p>
-                                <p class="text-xs italic text-justify text-gray-300">
-                                    {{ $product->description }}
-                                </p>
-                                <p class="mt-4 font-semibold">
-                                    R$ {{ $product->price }}
-                                </p>
-                            </div>
-                        </div>
+        <div class="max-w-4xl mx-auto"
+            x-data="{ showProducts: {} }">
+            @foreach ($categories as $category)
+                <div>
+                    <a href="#" class="flex italic font-bold"
+                        x-on:click="showProducts['{{$category->id}}'] = !showProducts['{{$category->id}}']">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 mr-2 text-red-950">
+                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-xl text-red-950">
+                            {{ $category->name }}
+                        </span>
                     </a>
+                    @foreach ($category->products as $product)
+                    <div class="max-w-4xl p-4 mx-auto my-4 mt-4 border border-gray-200 rounded-lg"
+                        x-transition.opacity.duration.500ms
+                        x-show="!showProducts['{{$category->id}}'] || false">
+                    <a href="#"
+                        x-data="{ productData: { text: '{{ $product->name }}', product_id: {{ $product->id }}, quantity: 1 } }"
+                        x-on:click="$dispatch('addCart', productData)"
+                        class="no-underline">
+                                <div class="justify-between sm:flex">
+                                    <div class="mb-4 md:mb-0 md:ml-12 sm:order-2">
+                                        <img src="{{ asset('img/'.$product->image) }}" alt="{{ $product->name }}" class="rounded-xl sm:w-32 md:w-32">
+                                    </div>
+                                    <div class="my-auto sm:order-1">
+                                        <p class="font-semibold text-1xl">
+                                            {{ $product->name }}
+                                        </p>
+                                        <p class="text-xs italic text-justify text-gray-300">
+                                            {{ $product->description }}
+                                        </p>
+                                        <p class="mt-4 font-semibold">
+                                            R$ {{ $product->price }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
                 </div>
             @endforeach
-        @endforeach
+        </div>
     </div>
 </div>
-

@@ -14,4 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', HomeComponent::class);
+Route::get('/', HomeComponent::class)->name('home');
+Route::any('/add', [HomeComponent::class, 'addCart'])->name('add');

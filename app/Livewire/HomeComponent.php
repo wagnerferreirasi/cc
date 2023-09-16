@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use \Cart;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\Category;
@@ -34,15 +33,15 @@ class HomeComponent extends Component
             return response()->json(['error' => true, 'message' => 'Produto não encontrado'], 404);
         }
 
-        $rowId = $product->id;
-        $userId = 1;
-
-        Cart::session($userId)->add([
-            'id' => $rowId,
+        \Cart::add([
+            'id' => $product->id,
+            'qty' => $quantity,
             'name' => $product->name,
             'price' => $product->price,
-            'quantity' => $quantity
+            'options' => []
         ]);
+
+        //dd(\Cart::total());
 
         return response()->json(['message' => 'Produto adicionado ao carrinho com sucesso']);
     }

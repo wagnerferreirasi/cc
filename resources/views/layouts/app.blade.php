@@ -69,6 +69,9 @@
                         response.data.message,
                         'success'
                     );
+                    setTimeout (function () {
+                        window.location.reload();
+                    }, 3001);
                 })
                 .catch(error => {
                     Toast.fire(

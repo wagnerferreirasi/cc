@@ -6,16 +6,35 @@ use App\Models\Product;
 use Livewire\Component;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
 
-class HomeComponent extends Component
+class HomeComponent extends Component implements ShouldBroadcast
 {
+    use InteractsWithSockets;
     public ?array $products;
 
     public $categories;
 
-    public function mount()
+    public $message;
+
+    public function mount($message = 'teste')
     {
+        $this->message = $message;
         $this->categories = Category::with('products')->get();
+    }
+
+    public function broadcastOn()
+    {
+        return ['my-channel'];
+    }
+
+    public function broadcastAs()
+    {
+        return 'my-event';
     }
 
     public function render()

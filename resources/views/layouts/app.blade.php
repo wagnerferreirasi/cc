@@ -20,69 +20,80 @@
 
 <body class="antialiased">
     <x-navbar-component></x-navbar-component>
+
     <div class="mt-24">
         {{ $slot }}
     </div>
 
     <script>
-    document.addEventListener('swal', event => {
-        var detail = event.detail[0];
-        Swal.fire(
-            detail.title,
-            detail.text,
-            detail.icon
-        );
-    });
-
-    document.addEventListener('addCart', event => {
-        Swal.fire({
-            title: event.detail.text,
-            text: 'Deseja adicionar o ' + event.detail.text + ' ao carrinho?',
-            input: 'number',
-            inputValue: 1,
-            inputAttributes: {
-                class: 'w-24 px-2 py-1 text-sm text-gray-500 border border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300',
-                min: 1,
-                value: event.detail.quantity
-            },
-            inputLabel: 'Quantidade',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#65a30d',
-            cancelButtonColor: '#450a0a',
-            confirmButtonText: 'Sim',
-            cancelButtonText: 'Não',
-            allowOutsideClick: false
-        }).then(result => {
-            if (result.isConfirmed) {
-                axios.post('{{ route("add") }}', {
-                    product_id: event.detail.product_id,
-                    quantity: result.value
-                }, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(response => {
-                    Toast.fire(
-                        'Sucesso!',
-                        response.data.message,
-                        'success'
-                    );
-                    setTimeout (function () {
-                        window.location.reload();
-                    }, 3001);
-                })
-                .catch(error => {
-                    Toast.fire(
-                        'Ops!',
-                        error.response.data.message,
-                        'error'
-                    );
-                });
-            }
+        var channel = Echo.channel('my-channel');
+        channel.listen('.my-event', function(data) {
+            alert(JSON.stringify(data));
         });
-    });
+
+        document.addEventListener('swal', event => {
+            var detail = event.detail[0];
+            Swal.fire(
+                detail.title,
+                detail.text,
+                detail.icon
+            );
+        });
+
+        document.addEventListener('addCart', event => {
+            Swal.fire({
+                title: event.detail.text,
+                text: 'Deseja adicionar ' + event.detail.text + ' ao pedido?',
+                input: 'number',
+                inputValue: 1,
+                inputAttributes: {
+                    class: 'w-24 px-2 py-1 text-sm text-gray-500 border border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300',
+                    min: 1,
+                    value: event.detail.quantity
+                },
+                inputLabel: 'Quantidade:',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#65a30d',
+                cancelButtonColor: '#450a0a',
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Não',
+                allowOutsideClick: false
+            }).then(result => {
+                if (result.isConfirmed) {
+                    axios.post('{{ route("add") }}', {
+                        product_id: event.detail.product_id,
+                        quantity: result.value
+                    },{
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(response => {
+                        Toast.fire(
+                            'Sucesso!',
+                            response.data.message,
+                            'success'
+                        );
+
+                        setTimeout (function () {
+                            window.location.reload();
+                        }, 3001);
+
+                    }).catch(error => {
+                        Toast.fire(
+                            'Ops!',
+                            error.response.data.message,
+                            'error'
+                        );
+
+                        setTimeout (function () {
+                            window.location.reload();
+                        }, 3001);
+
+                    });
+                }
+            });
+        });
     </script>
 </body>
 

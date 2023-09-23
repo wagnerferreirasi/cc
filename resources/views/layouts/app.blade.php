@@ -22,15 +22,12 @@
     <x-navbar-component></x-navbar-component>
 
     <div class="mt-24">
+
+
         {{ $slot }}
     </div>
 
     <script>
-        var channel = Echo.channel('my-channel');
-        channel.listen('.my-event', function(data) {
-            alert(JSON.stringify(data));
-        });
-
         document.addEventListener('swal', event => {
             var detail = event.detail[0];
             Swal.fire(

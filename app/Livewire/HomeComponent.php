@@ -6,35 +6,18 @@ use App\Models\Product;
 use Livewire\Component;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Queue\SerializesModels;
 
-class HomeComponent extends Component implements ShouldBroadcast
+class HomeComponent extends Component
 {
-    use InteractsWithSockets;
     public ?array $products;
 
     public $categories;
 
     public $message;
 
-    public function mount($message = 'teste')
+    public function mount()
     {
-        $this->message = $message;
         $this->categories = Category::with('products')->get();
-    }
-
-    public function broadcastOn()
-    {
-        return ['my-channel'];
-    }
-
-    public function broadcastAs()
-    {
-        return 'my-event';
     }
 
     public function render()
@@ -59,8 +42,6 @@ class HomeComponent extends Component implements ShouldBroadcast
             'price' => $product->price,
             'options' => []
         ]);
-
-        //dd(\Cart::total());
 
         return response()->json(['message' => 'Produto adicionado ao carrinho com sucesso']);
     }

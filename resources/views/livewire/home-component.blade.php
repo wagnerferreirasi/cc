@@ -1,15 +1,5 @@
 <div>
-    <div class="my-8 text-center">
-        <img src="{{ asset('img/logo.png') }}" alt="logo" class="w-32 mx-auto rounded-full">
-        <h1 class="text-3xl font-bold text-red-950">
-            {{ config('app.name') }}
-        </h1>
-        <p class="text-sm italic text-gray-400">
-            Faça seu pedido de forma rápida e segura.
-        </p>
-    </div>
-    <hr class="my-8">
-    <div class="px-4">
+    <x-header-component>
         <div class="flex max-w-4xl p-4 mx-auto border border-gray-100 rounded-lg shadow-sm">
             <div class="flex flex-col gap-2 align-baseline">
                 <p class="flex text-sm font-bold text-lime-400">
@@ -38,7 +28,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </x-header-component>
     <div class="px-4 my-8">
         <div class="flex flex-row max-w-4xl gap-2 mx-auto">
             <button class="px-4 py-2 text-gray-500 border border-gray-100 rounded-md hover:bg-gray-50">
@@ -75,7 +65,7 @@
                         class="no-underline">
                                 <div class="justify-between sm:flex">
                                     <div class="mb-4 md:mb-0 md:ml-12 sm:order-2">
-                                        <img src="{{ asset('img/'.$product->image) }}" alt="{{ $product->name }}" class="rounded-xl sm:w-32 md:w-32">
+                                        <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="rounded-xl sm:w-32 md:w-32">
                                     </div>
                                     <div class="my-auto sm:order-1">
                                         <p class="font-semibold text-1xl">

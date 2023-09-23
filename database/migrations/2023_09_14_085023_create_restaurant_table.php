@@ -14,10 +14,17 @@ return new class extends Migration
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('address');
-            $table->string('phone');
-            $table->string('email');
+            $table->string('logo')->nullable();
             $table->string('cnpj');
+            $table->string('email');
+            $table->string('phone');
+            $table->string('zipcode');
+            $table->string('address')->nullable();
+            $table->string('number')->nullable();
+            $table->string('complement')->nullable();
+            $table->string('neighborhood')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
             $table->timestamps();
         });
     }

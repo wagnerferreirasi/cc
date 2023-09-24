@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('restaurant_id')->constrained();
             $table->string('name');
             $table->string('slug');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

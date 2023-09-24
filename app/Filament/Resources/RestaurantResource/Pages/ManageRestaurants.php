@@ -4,9 +4,9 @@ namespace App\Filament\Resources\RestaurantResource\Pages;
 
 use App\Filament\Resources\RestaurantResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\ManageRecords;
 
-class ListRestaurants extends ListRecords
+class ManageRestaurants extends ManageRecords
 {
     protected static string $resource = RestaurantResource::class;
 

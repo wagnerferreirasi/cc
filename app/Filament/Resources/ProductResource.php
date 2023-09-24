@@ -17,36 +17,35 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-gift';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('category_id')
-                    ->label('Categoria')
-                    ->relationship('category', 'name'),
-
+                    ->relationship('category', 'name')
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('description')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Textarea::make('description')
+                    ->maxLength(122)
+                    ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
-                    ->image()
-                    ->visibility('public')
-                    ->required(),
+                    ->image(),
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric()
                     ->prefix('R$'),
                 Forms\Components\TextInput::make('discount')
-                    ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->prefix('R$')
+                    ->default(0.00),
                 Forms\Components\TextInput::make('stock')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->default(0),
                 Forms\Components\Toggle::make('status')
                     ->required(),
                 Forms\Components\Toggle::make('featured')
@@ -60,21 +59,17 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('category_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('category.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
                 Tables\Columns\ImageColumn::make('image')
-                    ->circular()
-                    ->defaultImageUrl('https://via.placeholder.com/150'),
+                    ->circular(),
                 Tables\Columns\TextColumn::make('price')
-                    ->money('brl')
+                    ->money('BRL')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('discount')
-                    ->numeric()
+                    ->money('BRL')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
@@ -99,7 +94,6 @@ class ProductResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

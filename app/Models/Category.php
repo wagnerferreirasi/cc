@@ -8,7 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+    protected $fillable = [
+        'restaurant_id',
+        'name',
+        'slug',
+        'description',
+    ];
+
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
 
     public function products()
     {

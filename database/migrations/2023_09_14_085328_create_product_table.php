@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained();
             $table->string('name');
-            $table->string('description');
-            $table->string('image');
+            $table->longText('description')->nullable();
+            $table->string('image')->nullable();
             $table->decimal('price');
-            $table->decimal('discount');
-            $table->integer('stock');
-            $table->boolean('status')->comment('');
-            $table->boolean('featured');
-            $table->boolean('active');
+            $table->decimal('discount')->default(0)->nullable();
+            $table->integer('stock')->default(0);
+            $table->boolean('status')->default(1);
+            $table->boolean('featured')->default(0);
+            $table->boolean('active')->default(1);
             $table->timestamps();
         });
     }

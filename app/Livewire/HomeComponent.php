@@ -20,6 +20,7 @@ class HomeComponent extends Component
         $this->categories = Category::with('products')->get();
     }
 
+    #[On('addCart')]
     public function render()
     {
         return view('livewire.home-component');
